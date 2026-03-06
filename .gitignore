@@ -1,8 +1,8 @@
-# Exceptions for Cruor Specific Content
-!Plugins/GameFeatures/CruorRTSCore/Content/
-
 # Lyra specific Content, intended to be copied over from the FAB version of the Lyra Starter Game Project at https://www.fab.com/listings/93faede1-4434-47c0-85f1-bf27c0820ad0
 Content/
+
+# Exceptions for Cruor Specific Content
+!Plugins/GameFeatures/CruorRTSCore/Content/
 
 # Visual Studio user specific files
 .vs/
