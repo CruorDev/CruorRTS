@@ -19,7 +19,8 @@ struct FOverlapResult;
 UCLASS()
 /* 
  * Start @CruorRTS_CodeModification
- * This is to allow access in CruorRTSPlayerGameplayAbility_Interact.cpp that is derived from LyraGameplayAbility_Interact which uses this class.
+ * This is to allow access in CruorRTSPlayerGameplayAbility_Interact that is derived from LyraGameplayAbility_Interact which uses this class.
+ * This is also directly used by CruorRTS_PlayerPawnMovementComponent and AbilityTask_GrantAbilitiesAndInteractionsOnHover.
 */
 class LYRAGAME_API UInteractionStatics : public UBlueprintFunctionLibrary
 /* 

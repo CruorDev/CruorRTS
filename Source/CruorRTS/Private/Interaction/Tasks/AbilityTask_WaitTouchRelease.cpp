@@ -5,9 +5,16 @@
 
 #include "CruorRTS/CruorRTSLogChannels.h"
 
+UAbilityTask_WaitTouchRelease::UAbilityTask_WaitTouchRelease(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	StartTime = 0.f;
+}
+
 void UAbilityTask_WaitTouchRelease::OnTouchReleased()
 {
-	OnTouchRelease.Broadcast();
+	const float ElapsedTime = GetWorld()->GetTimeSeconds() - StartTime;
+	OnTouchRelease.Broadcast(ElapsedTime);
 	EndTask();
 }
 
@@ -16,6 +23,7 @@ void UAbilityTask_WaitTouchRelease::Activate()
 	SetWaitingOnAvatar();
 	
 	const UWorld* World = GetWorld();
+	StartTime = World->GetTimeSeconds();
 	World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::CheckIfTouch, TouchPollingRate, true);
 }
 

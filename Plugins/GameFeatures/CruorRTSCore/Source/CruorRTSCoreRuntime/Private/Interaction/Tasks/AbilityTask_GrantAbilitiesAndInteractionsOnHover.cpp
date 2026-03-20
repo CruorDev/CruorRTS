@@ -52,7 +52,7 @@ void UAbilityTask_GrantAbilitiesAndInteractionsOnHover::UpdateInteractableOption
 		{
 			FGameplayAbilitySpec* InteractionAbilitySpec = nullptr;
 
-			// if there is a handle an a target ability system, we're triggering the ability on the target.
+			// if there is a handle on a target ability system, we're triggering the ability on the target.
 			if (Option.TargetAbilitySystem && Option.TargetInteractionAbilityHandle.IsValid())
 			{
 				// Find the spec
@@ -108,8 +108,7 @@ void UAbilityTask_GrantAbilitiesAndInteractionsOnHover::UpdateInteractableOption
 	if (bOptionsChanged)
 	{
 		CurrentOptions = NewOptions;
-		InteractableObjectsChanged.Broadcast(CurrentOptions);
-	}
+		InteractableObjectsOnHoverChanged.Broadcast(CurrentOptions);	}
 }
 
 void UAbilityTask_GrantAbilitiesAndInteractionsOnHover::OnDestroy(bool AbilityEnded)

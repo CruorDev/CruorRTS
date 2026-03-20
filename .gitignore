@@ -53,6 +53,17 @@ Content/
 Binaries/*
 Plugins/**/Binaries/*
 
+# Builds
+Build/*
+
+# Whitelist PakBlacklist-<BuildConfiguration>.txt files
+!Build/*/
+Build/*/**
+!Build/*/PakBlacklist*.txt
+
+# Don't ignore icon files in Build
+!Build/**/*.ico
+
 # Automatically generated Build files
 Build/Scripts/obj/*
 Build/Scripts/*.csproj.props

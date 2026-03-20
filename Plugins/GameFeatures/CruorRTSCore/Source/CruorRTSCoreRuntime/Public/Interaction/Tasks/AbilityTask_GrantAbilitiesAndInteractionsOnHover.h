@@ -9,7 +9,7 @@
 #include "AbilityTask_GrantAbilitiesAndInteractionsOnHover.generated.h"
 
 class IInteractableTarget;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableObjectsChangedEvent, const TArray<FInteractionOption>&,
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableObjectsChangedOnHoverEvent, const TArray<FInteractionOption>&,
                                             InteractableOptions);
 
 /**
@@ -38,7 +38,7 @@ public:
 public:
 	
 	UPROPERTY(BlueprintAssignable)
-	FInteractableObjectsChangedEvent InteractableObjectsChanged;
+	FInteractableObjectsChangedOnHoverEvent InteractableObjectsOnHoverChanged;
 	
 protected:
 	
@@ -46,6 +46,7 @@ protected:
 		const FInteractionQuery& InteractQuery, 
 		const TArray<TScriptInterface<IInteractableTarget>>& InteractableTargets);
 	
+	UPROPERTY()
 	TArray<FInteractionOption> CurrentOptions;
 	
 	FCollisionProfileName TraceProfile;

@@ -31,3 +31,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CruorRTSUnitLeader|PawnController")
 	TSubclassOf<AAIController> PawnController;
 };
+
+#undef UE_API

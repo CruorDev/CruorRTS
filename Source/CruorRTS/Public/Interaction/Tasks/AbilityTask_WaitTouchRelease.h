@@ -7,15 +7,19 @@
 #include "Abilities/Tasks/AbilityTask.h"
 #include "AbilityTask_WaitTouchRelease.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTouchReleaseDelegate);
+#define UE_API CRUORRTS_API
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTouchReleaseDelegate, float, TimeHeld);
 
 /**
  * An Ability Task to determine if Touch1 has been released because AbilityTask_WaitInputRelease is bugged (UE_5.7)
  */
-UCLASS()
+UCLASS(MinimalAPI)
 class UAbilityTask_WaitTouchRelease : public UAbilityTask
 {
 	GENERATED_BODY()
+	
+	UE_API explicit UAbilityTask_WaitTouchRelease(const FObjectInitializer& ObjectInitializer);
 	
 	UPROPERTY(BlueprintAssignable)
 	FTouchReleaseDelegate OnTouchRelease;
@@ -36,6 +40,10 @@ private:
 	void CheckIfTouch();
 
 	float TouchPollingRate = 0.100;
+	
+	float StartTime;
 
 	FTimerHandle TimerHandle;
 };
+
+#undef UE_API
