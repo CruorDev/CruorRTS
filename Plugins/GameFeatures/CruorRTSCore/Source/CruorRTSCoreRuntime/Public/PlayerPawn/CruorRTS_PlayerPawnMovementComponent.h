@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Interaction/Tasks/AbilityTask_GrantAbilitiesAndInteractionsOnHover.h"
 #include "CruorRTS_PlayerPawnMovementComponent.generated.h"
 
 #define UE_API CRUORRTSCORERUNTIME_API
@@ -24,11 +25,17 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;	
 	
+	UFUNCTION(BlueprintCallable)
+	FVector GetLastTouchLocation() const { return ScreenLocationIntersection; }
+	
+	UFUNCTION(BlueprintCallable)
+	void OnInteractableObjectsChanged(const TArray<FInteractionOption>& InteractableOptions);
+	
 private:
 	
 	void MoveTracking();
 	void UpdatePivotPoint() const;
-	void UpdateCursorProjection() const;
+	void UpdateCursorProjection();
 	
 
 private:
@@ -37,6 +44,12 @@ private:
 	FVector ScreenLocationIntersection;
 	
 	FVector DragMoveLocation;
+	
+	UPROPERTY()
+	TArray<FInteractionOption> CurrentOptions;	
+	
+	UPROPERTY()
+	TObjectPtr<AActor> HoverActor;
 };
 
 #undef UE_API

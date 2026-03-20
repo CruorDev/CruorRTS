@@ -81,7 +81,7 @@ void UCruorRTS_UnitLeaderSpawnerComponent::OnTeamAssigned(UObject* TeamAgent, in
 	TeamID = NewTeamID;
 	if (ULyraTeamSubsystem* TeamSubsystem = UWorld::GetSubsystem<ULyraTeamSubsystem>(GetWorld()))
 	{
-		for (const auto UnitLeader : UnitLeaderControllers)
+		for (const TObjectPtr<AAIController>& UnitLeader : UnitLeaderControllers)
 		{		
 			TeamSubsystem->ChangeTeamForActor(UnitLeader, TeamID);
 		}		
@@ -94,7 +94,7 @@ void UCruorRTS_UnitLeaderSpawnerComponent::OnTeamAssigned(UObject* TeamAgent, in
 #if WITH_SERVER_CODE
 void UCruorRTS_UnitLeaderSpawnerComponent::ServerSpawnUnitLeaders_Implementation()
 {
-	for (const auto UnitLeader : UnitLeaders)
+	for (const TSoftObjectPtr<UCruorRTS_UnitLeaderSpawnerPawnData>& UnitLeader : UnitLeaders)
 	{
 		const UCruorRTS_UnitLeaderSpawnerPawnData* UnitLeaderData = UnitLeader.Get();
 		if (!UnitLeaderData) UnitLeaderData = UnitLeader.LoadSynchronous();

@@ -10,7 +10,14 @@ public class LyraEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V6;
 
 		Type = TargetType.Editor;
-		ExtraModuleNames.AddRange(new string[] { "LyraGame", "LyraEditor" });
+		/*
+		 * Start @CruorRTS_CodeModification
+		 * Adding our Custom Module to the EditorTarget
+		 */
+		ExtraModuleNames.AddRange(new string[] { "LyraGame", "LyraEditor", "CruorRTS" });
+		/*
+		 *  End @CruorRTS_CodeModification
+		 */
 
 		if (!bBuildAllModules)
 		{

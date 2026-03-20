@@ -6,6 +6,7 @@
 #include "PlayerPawn/CruorRTS_PlayerPawn.h"
 #include "Components/SphereComponent.h"
 #include "CruorRTS/CruorRTSLogChannels.h"
+#include "Interaction/InteractionStatics.h"
 
 #define COLLISION_LANDSCAPE ECC_GameTraceChannel6
 
@@ -34,6 +35,15 @@ void UCruorRTS_PlayerPawnMovementComponent::TickComponent(
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	MoveTracking();
 	UpdatePivotPoint();
+}
+
+void UCruorRTS_PlayerPawnMovementComponent::OnInteractableObjectsChanged(
+	const TArray<FInteractionOption>& InteractableOptions)
+{
+	CurrentOptions = InteractableOptions;
+	CurrentOptions.IsEmpty() ? 
+	HoverActor = nullptr : 
+	HoverActor = UInteractionStatics::GetActorFromInteractableTarget(CurrentOptions[0].InteractableTarget);
 }
 
 void UCruorRTS_PlayerPawnMovementComponent::MoveTracking()
@@ -134,7 +144,7 @@ void UCruorRTS_PlayerPawnMovementComponent::UpdatePivotPoint() const
 	}
 }
 
-void UCruorRTS_PlayerPawnMovementComponent::UpdateCursorProjection() const
+void UCruorRTS_PlayerPawnMovementComponent::UpdateCursorProjection() 
 {
 	const ACruorRTS_PlayerPawn* CommanderPawn = Cast<ACruorRTS_PlayerPawn>(GetPawnOwner());
 	const USceneComponent* RootSceneComponent = CommanderPawn->GetRootComponent();
@@ -164,11 +174,41 @@ void UCruorRTS_PlayerPawnMovementComponent::UpdateCursorProjection() const
 		CursorProjection->AddLocalRotation(
 			FRotator(0.f, FMath::Wrap(static_cast<float>(RootSceneComponent->GetComponentRotation().Yaw) 
 				+ 90.f, -180.f, 180.f) - 
-				CursorProjection->GetComponentRotation().Yaw, 0.f));
-		
-		
+				CursorProjection->GetComponentRotation().Yaw, 0.f));		
 		//GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, FString::Printf(TEXT("CursorProjection: %s"), *CursorProjection->GetComponentLocation().ToString()));
-	}
+	
+		if (CurrentOptions.IsEmpty())
+		{
+			CursorProjection->SetWorldScale3D(FVector(1.f, 1.f, 1.f));
+			return;
+		}
+	
+		for (const FInteractionOption Option : CurrentOptions)
+		{
+			TObjectPtr<AActor> Actor = UInteractionStatics::GetActorFromInteractableTarget(Option.InteractableTarget);
+			if (!IsValid(HoverActor))
+				HoverActor = Actor;
+			if (!IsValid(Actor))
+				return;
+			if (FVector::Dist(Actor->GetActorLocation(), Selector->GetComponentLocation()) < FVector::Dist(HoverActor->GetActorLocation(), Selector->GetComponentLocation()))
+				HoverActor = Actor;
+		}
+		
+		FVector HoverActorOrigin;
+		FVector HoverActorBoxExtent;
+		HoverActor->GetActorBounds(true, HoverActorOrigin, HoverActorBoxExtent);
+		const float Scale = HoverActorBoxExtent.GetAbsMax() / 100.f + FMath::Sin(World->GetTimeSeconds() * 5.f) * 0.25f + 1.f;
+		CursorProjection->SetWorldTransform(
+			FTransform(FRotationMatrix::MakeFromZ(HitResultCursor.Normal).Rotator(), 
+				FVector(HoverActorOrigin.X, HoverActorOrigin.Y, HitResultCursor.Location.Z + 5.f), 
+				FVector(Scale, Scale, 1.f)));
+		CursorProjection->AddLocalRotation(
+			FRotator(0.f, 
+				FMath::Wrap(static_cast<float>(RootSceneComponent->GetComponentRotation().Yaw) + 90.f, 
+				-180.f, 
+				180.f) - CursorProjection->GetComponentRotation().Yaw, 
+				0.f));	
+	}	
 }
 
 #undef COLLISION_LANDSCAPE
