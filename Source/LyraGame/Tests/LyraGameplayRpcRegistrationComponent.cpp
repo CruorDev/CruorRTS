@@ -25,8 +25,6 @@ ULyraGameplayRpcRegistrationComponent* ULyraGameplayRpcRegistrationComponent::Ge
 	if (ObjectInstance == nullptr)
 	{
 		ObjectInstance = NewObject<ULyraGameplayRpcRegistrationComponent>();
-		FParse::Value(FCommandLine::Get(), TEXT("externalrpclistenaddress="), ObjectInstance->ListenerAddress);
-		FParse::Value(FCommandLine::Get(), TEXT("rpcsenderid="), ObjectInstance->SenderID);
 		if (!UExternalRpcRegistry::GetInstance())
 		{
 			GLog->Log(TEXT("BotRPC"), ELogVerbosity::Warning, FString::Printf(TEXT("Unable to create RPC Registry Instance. This might lead to issues using the RPC Registry.")));
@@ -167,8 +165,8 @@ bool ULyraGameplayRpcRegistrationComponent::HttpFireOnceCommand(const FHttpServe
 		OnComplete(MoveTemp(Response));
 		return true;
 	}
-	APawn* FortPlayerPawn = LPC->GetPawn();
-	if (!FortPlayerPawn)
+	APawn* LyraPlayerPawn = LPC->GetPawn();
+	if (!LyraPlayerPawn)
 	{
 		TUniquePtr<FHttpServerResponse> Response = CreateSimpleResponse(false, TEXT("Player pawn not found"));
 		OnComplete(MoveTemp(Response));

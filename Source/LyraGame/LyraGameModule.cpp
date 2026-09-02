@@ -17,4 +17,4 @@ class FLyraGameModule : public FDefaultGameModuleImpl
 	}
 };
 
-IMPLEMENT_MODULE(FLyraGameModule, LyraGame);
+IMPLEMENT_PRIMARY_GAME_MODULE(FLyraGameModule, LyraGame, "LyraGame");

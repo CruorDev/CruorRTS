@@ -21,7 +21,6 @@ protected:
 public:
 	static UE_API ULyraGameplayRpcRegistrationComponent* GetInstance();
 
-
 #if WITH_RPC_REGISTRY
 	/**
 	* Basic function that converts any request into a proper Json body.

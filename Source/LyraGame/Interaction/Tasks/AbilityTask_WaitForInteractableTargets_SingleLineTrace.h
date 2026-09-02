@@ -36,7 +36,7 @@ private:
 	FGameplayAbilityTargetingLocationInfo StartLocation;
 
 	float InteractionScanRange = 100;
-	float InteractionScanRate = 0.100;
+	float InteractionScanRate = 0.100f;
 	bool bShowDebug = false;
 
 	FTimerHandle TimerHandle;

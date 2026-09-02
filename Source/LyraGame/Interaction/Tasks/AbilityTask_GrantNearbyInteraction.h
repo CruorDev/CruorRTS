@@ -29,7 +29,7 @@ private:
 	void QueryInteractables();
 
 	float InteractionScanRange = 100;
-	float InteractionScanRate = 0.100;
+	float InteractionScanRate = 0.100f;
 
 	FTimerHandle QueryTimerHandle;
 

@@ -32,6 +32,15 @@ enum class ELyraAllowBackgroundAudioSetting : uint8
 	Num UMETA(Hidden),
 };
 
+UENUM()
+enum class ELyraGamepadInputAPIOption : uint8
+{
+	Legacy,	// XInput + WinDualShock
+	Modern,	// GameInput API
+
+	Num UMETA(Hidden),
+};
+
 UENUM(BlueprintType)
 enum class ELyraGamepadSensitivity : uint8
 {
@@ -159,6 +168,18 @@ private:
 	/** Holds the gamepad look stick dead zone value. */
 	UPROPERTY()
 	float GamepadLookStickDeadZone;
+
+	/////////////////////////////////////////////////
+	// Gamepad Input API (only available on PC)
+	
+	UPROPERTY()
+	ELyraGamepadInputAPIOption GamepadInputAPIOptions;
+
+public:
+	UFUNCTION()
+	ELyraGamepadInputAPIOption GetGamepadInputAPIOption() const { return GamepadInputAPIOptions; }
+	UFUNCTION()
+	void SetGamepadInputAPIOption(const ELyraGamepadInputAPIOption NewValue);
 
 	////////////////////////////////////////////////////////
 	// Gamepad Trigger Haptics
