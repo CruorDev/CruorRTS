@@ -10,7 +10,7 @@
 
 #define COLLISION_LANDSCAPE ECC_GameTraceChannel6
 
-namespace CruorRTSPlayerPawn
+namespace CruorRTS_PlayerPawn
 {
 	static float GroundTraceDistance = 100000.0f;
 	FAutoConsoleVariableRef CVar_GroundTraceDistance(
@@ -133,10 +133,10 @@ void UCruorRTS_PlayerPawnMovementComponent::UpdatePivotPoint() const
 		World->LineTraceSingleByChannel(HitResultAboveRoot,
 			CommanderPawn->GetRootComponent()->GetComponentLocation() 
 			+ CommanderPawn->GetRootComponent()->GetUpVector() 
-			* CruorRTSPlayerPawn::GroundTraceDistance,
+			* CruorRTS_PlayerPawn::GroundTraceDistance,
 			CommanderPawn->GetRootComponent()->GetComponentLocation() 
 			+ CommanderPawn->GetRootComponent()->GetUpVector() 
-			* -CruorRTSPlayerPawn::GroundTraceDistance,
+			* -CruorRTS_PlayerPawn::GroundTraceDistance,
 			ECollisionChannel::COLLISION_LANDSCAPE);
 		HitResultAboveRoot.bBlockingHit ? 
 		CommanderPawn->GetPivotPoint()->SetRelativeLocation(FVector(0.f, 0.f, HitResultAboveRoot.Location.Z)) 
@@ -160,9 +160,9 @@ void UCruorRTS_PlayerPawnMovementComponent::UpdateCursorProjection()
 		FHitResult HitResultCursor;
 		World->LineTraceSingleByChannel(HitResultCursor,
 			CursorProjection->GetComponentLocation() + 
-			Selector->GetUpVector() * CruorRTSPlayerPawn::GroundTraceDistance,
+			Selector->GetUpVector() * CruorRTS_PlayerPawn::GroundTraceDistance,
 			CursorProjection->GetComponentLocation() + 
-			Selector->GetUpVector() * -CruorRTSPlayerPawn::GroundTraceDistance,
+			Selector->GetUpVector() * -CruorRTS_PlayerPawn::GroundTraceDistance,
 			ECollisionChannel::COLLISION_LANDSCAPE);
 		CursorProjection->SetWorldTransform(FTransform(
 			FRotationMatrix::MakeFromZ(HitResultCursor.Normal).Rotator(), 

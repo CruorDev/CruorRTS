@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractableObjectsChangedOnHoverEv
                                             InteractableOptions);
 
 /**
- * Follows the Commander's Cursor; Grants Gameplay Abilities and Creates Interactable Options for EbonradeCommanderGameplayAbility_Interact to use.
+ * Follows the Commander's Cursor; Grants Gameplay Abilities and Creates Interactable Options for CruorRTS_CommanderGameplayAbility_Interact to use.
  */
 UCLASS()
 class CRUORRTSCORERUNTIME_API UAbilityTask_GrantAbilitiesAndInteractionsOnHover : public UAbilityTask

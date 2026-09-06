@@ -38,6 +38,20 @@ public class CruorRTSCoreRuntime : ModuleRules
 				"ModularGameplay",
 				"ModularGameplayActors",
 				"SignificanceManager",
+				"StateTreeModule",  // For Mass State Tree Tasks
+				"MassCore",
+				"MassEntity",
+				"MassCommon",
+				"MassSignals",
+				"MassMovement",
+				"MassRepresentation",
+				"MassNavigation",
+				"MassSpawner",
+				"MassSimulation", 
+				"MassNavMeshNavigation",
+				"MassAIBehavior", // For Mass State Tree Tasks
+				"NavigationSystem",
+				"NavCorridor",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

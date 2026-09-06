@@ -19,5 +19,12 @@ class CRUORRTSCORERUNTIME_API UCruorRTS_PlayerGameplayAbility_Interact : public 
 public:
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void MassTriggerInteraction(const FInteractionOption& Option);
+	
+private:
+	
+	TMap<FObjectKey, FGameplayAbilitySpecHandle> InteractionAbilityCache;
 		
 };
