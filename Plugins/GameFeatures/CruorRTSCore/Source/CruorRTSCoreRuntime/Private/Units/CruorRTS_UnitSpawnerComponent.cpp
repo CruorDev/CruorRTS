@@ -589,35 +589,25 @@ void UCruorRTS_UnitSpawnerComponent::SpawnGeneratedMassUnits(TConstArrayView<FMa
 
 				EntityManager.BatchSetEntityFragmentValues(CreationContext->GetEntityCollections(EntityManager), FragmentInstances);
 				
-				for (int32 Index = 0; Index < Entities.Num(); ++Index)
+				UCruorRTS_SquadMovementSubsystem* const SquadSubsystem = EntityManager.GetWorld()->GetSubsystem<
+					UCruorRTS_SquadMovementSubsystem>();
+				ensure(SquadSubsystem);
+				
+				TArray<FVector> InitialPositions;
+				SquadSubsystem->CalculateNewOffsets(*SquadFragment, SquadFragment->FormationType, Entities.Num(), InitialPositions);
+				
+				for (int32 Index = 0; Index < InitialPositions.Num(); ++Index)
 				{
 					const FMassEntityHandle Entity = Entities[Index];
-					if (FCruorRTS_SquadMemberFragment* MemberFragment = EntityManager.GetFragmentDataPtr<FCruorRTS_SquadMemberFragment>(Entity))
-					{
-						MemberFragment->SquadEntity = SquadEntity;
-					}
-
 					if (FTransformFragment* TransformFragment = EntityManager.GetFragmentDataPtr<FTransformFragment>(Entity))
 					{
-						const int32 Row = Index / Columns;
-						const int32 Col = Index % Columns;						
-						const float OffsetY = (Col * Spacing) - HalfWidth;
-						const float OffsetX = -(Row * Spacing) - Spacing; 
-
-						const FVector LocalOffset(OffsetX, OffsetY, 0.0f);
-						const FVector RotatedVector = CurrentRotation.RotateVector(LocalOffset);
-						const FVector WorldLocation = StartLocation + RotatedVector;
-
-						TransformFragment->SetTransform(FTransform(CurrentRotation, WorldLocation));
+						TransformFragment->SetTransform(FTransform(CurrentRotation, InitialPositions[Index]));
 					}
 				}
-
-				const auto SquadSubsystem = EntityManager.GetWorld()->GetSubsystem<UCruorRTS_SquadMovementSubsystem>();
-				if (SquadSubsystem)
-				{
-					SquadSubsystem->UpdateSquadOffsets(SquadEntity);
-					SquadSubsystem->SetSquadRotation(SquadEntity, CurrentRotation.Quaternion());
-				}
+				
+				SquadSubsystem->AddSquad(SquadEntity, Entities);
+				SquadSubsystem->UpdateSquadOffsets(SquadEntity);
+				SquadSubsystem->SetSquadRotation(SquadEntity, CurrentRotation.Quaternion());
 				
 				CurrentMassUnitIndex++;
 				TotalNum += Entities.Num();
