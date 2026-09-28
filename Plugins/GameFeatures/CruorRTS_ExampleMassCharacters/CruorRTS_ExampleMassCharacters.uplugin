@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "CruorRTS_ExampleMassCharacters",
+	"Description": "Example implementation of VAT ISM for Mass Entity RTS Units",
+	"Category": "Game Features",
+	"CreatedBy": "CruorDev",
+	"CreatedByURL": "https://www.cruor.net",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"ExplicitlyLoaded": true,
+	"BuiltInInitialFeatureState": "Active",
+	"Plugins": [
+		{
+			"Name": "CruorRTSCore",
+			"Enabled": true
+		}
+	]
+}

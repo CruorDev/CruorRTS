@@ -54,6 +54,9 @@ struct FCruorRTS_SquadFragment : public FMassFragment
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Squad")
 	int32 ActiveMemberCount = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Squad")
+	FVector SquadCentroid = FVector::ZeroVector;
 };
 
 /**

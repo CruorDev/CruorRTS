@@ -12,7 +12,15 @@ public class CruorRTS : ModuleRules
                 "Core", 
                 "GameplayAbilities",
                 "GameplayTags",
-                "GameplayTasks",
+                "GameplayTasks", 
+                "MassCore",
+                "MassCommon",
+                "MassEntity",
+                "MassGameplayDebug",
+                "MassLOD",
+                "MassMovement",
+                "MassRepresentation",
+                "MassSpawner",
             }
         );
 
@@ -22,7 +30,8 @@ public class CruorRTS : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore", 
+                "AnimToTexture"
             }
         );
     }

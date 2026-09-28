@@ -39,7 +39,7 @@ private:
 	
 	void CheckIfTouch();
 
-	float TouchPollingRate = 0.100;
+	float TouchPollingRate = 0.100f;
 	
 	float StartTime;
 

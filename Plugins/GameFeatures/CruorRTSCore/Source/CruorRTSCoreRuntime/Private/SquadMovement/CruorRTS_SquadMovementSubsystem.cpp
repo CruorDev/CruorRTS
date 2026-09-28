@@ -7,6 +7,7 @@
 #include "MassExecutionContext.h"
 #include "MassNavigationFragments.h"
 #include "MassSignalSubsystem.h"
+#include "Interaction/Mass/CruorRTS_MassSelectorSubsystem.h"
 #include "SquadMovement/CruorRTS_SquadSignalProcessors.h"
 #include "Mass/EntityFragments.h"
 #include "UObject/FastReferenceCollector.h"
@@ -48,28 +49,14 @@ void UCruorRTS_SquadMovementSubsystem::SetSquadMoveTarget(const FMassEntityHandl
 
 	FCruorRTS_SquadFragment* SquadFragment = EntityManager.GetFragmentDataPtr<FCruorRTS_SquadFragment>(SquadHandle);
 	if (!SquadFragment) return;
-		
-	// FMassEntityQuery EntityQuery(EntityManager.AsShared());
-	// EntityQuery.AddRequirement<FMassMoveTargetFragment>(EMassFragmentAccess::ReadWrite);	
-	// CreateQueryForSquad(SquadHandle, EntityQuery);
-	// 	
-	// FMassExecutionContext Context(EntityManager);
-	// TArray<FMassEntityHandle> Members;
-	// EntityQuery.ForEachEntityChunk(Context, [&Members, &SquadHandle](const FMassExecutionContext& ChunkContext)
-	// {
-	// 	const TConstArrayView<FCruorRTS_SquadMemberFragment> SquadMembers = ChunkContext.GetFragmentView<FCruorRTS_SquadMemberFragment>();
-	// 	const int32 NumInChunk = ChunkContext.GetNumEntities();
-	// 	
-	// 	for (int32 i = 0; i < NumInChunk; ++i)
-	// 	{
-	// 		if (SquadMembers[i].SquadEntity == SquadHandle)
-	// 		{
-	// 			Members.Emplace(ChunkContext.GetEntity(i));
-	// 		}		
-	// 	}
-	// });
 
-	SquadFragment->SquadDestination = NewMoveTarget;
+	if (const UCruorRTS_MassSelectorSubsystem* MassSelectorSubsystem 
+		= UWorld::GetSubsystem<UCruorRTS_MassSelectorSubsystem>(GetWorld()))
+	{
+		const FVector CachedLocation = MassSelectorSubsystem->GetCachedEntityLocation();
+		const FVector Offset = NewMoveTarget - CachedLocation;
+		SquadFragment->SquadDestination += Offset;
+	}
 
 	if (UMassSignalSubsystem* const SignalSubsystem = UWorld::GetSubsystem<UMassSignalSubsystem>(
 		EntityManager.GetWorld()))
@@ -88,23 +75,6 @@ void UCruorRTS_SquadMovementSubsystem::SetSquadRotation(const FMassEntityHandle&
 	if (!SquadFragment) return;
 
 	SquadFragment->SquadRotation = NewRotation;
-	// FMassEntityQuery EntityQuery(EntityManager.AsShared());
-	// CreateQueryForSquad(SquadHandle, EntityQuery);
-	// FMassExecutionContext Context(EntityManager);
-	// TArray<FMassEntityHandle> Members;
-	// EntityQuery.ForEachEntityChunk(Context, [&Members, &SquadHandle](const FMassExecutionContext& ChunkContext)
-	// {
-	// 	const TConstArrayView<FCruorRTS_SquadMemberFragment> SquadMembers = ChunkContext.GetFragmentView<FCruorRTS_SquadMemberFragment>();
-	// 	const int32 NumInChunk = ChunkContext.GetNumEntities();
-	// 	
-	// 	for (int32 i = 0; i < NumInChunk; ++i)
-	// 	{
-	// 		if (SquadMembers[i].SquadEntity == SquadHandle)
-	// 		{
-	// 			Members.Emplace(ChunkContext.GetEntity(i));
-	// 		}		
-	// 	}
-	// });
 	
 	UpdateSquadOffsets(SquadHandle);
 
@@ -125,24 +95,7 @@ void UCruorRTS_SquadMovementSubsystem::SetSquadFormation(const FMassEntityHandle
 	if (!SquadFragment) return;
 	
 	FMassEntityQuery EntityQuery(EntityManager.AsShared());
-	CreateQueryForSquad(SquadHandle, EntityQuery);		
-	
-	// FMassExecutionContext Context(EntityManager);
-	// TArray<FMassEntityHandle> Members;
-	//
-	// EntityQuery.ForEachEntityChunk(Context, [&Members, &SquadHandle](const FMassExecutionContext& ChunkContext)
-	// {
-	// 	const TConstArrayView<FCruorRTS_SquadMemberFragment> SquadMembers = ChunkContext.GetFragmentView<FCruorRTS_SquadMemberFragment>();
-	// 	const int32 NumInChunk = ChunkContext.GetNumEntities();
-	// 	
-	// 	for (int32 i = 0; i < NumInChunk; ++i)
-	// 	{
-	// 		if (SquadMembers[i].SquadEntity == SquadHandle)
-	// 		{
-	// 			Members.Emplace(ChunkContext.GetEntity(i));
-	// 		}		
-	// 	}
-	// });
+	CreateQueryForSquad(SquadHandle, EntityQuery);
 
 	SquadFragment->FormationType = FormationType;
 	UpdateSquadOffsets(SquadHandle);
@@ -158,10 +111,7 @@ void UCruorRTS_SquadMovementSubsystem::UpdateSquadOffsets(const FMassEntityHandl
 	const FMassEntityManager& EntityManager = UE::Mass::Utils::GetEntityManagerChecked(*GetWorld());
 
 	if (!EntityManager.IsEntityValid(SquadHandle)) return;
-	const FCruorRTS_SquadFragment* SquadFragment = EntityManager.GetFragmentDataPtr<FCruorRTS_SquadFragment>(SquadHandle);
-	// FMassEntityQuery EntityQuery(EntityManager.AsShared());
-	// CreateQueryForSquad(SquadHandle, EntityQuery);
-	// FMassExecutionContext ExecutionContext(EntityManager);
+	FCruorRTS_SquadFragment* SquadFragment = EntityManager.GetFragmentDataPtr<FCruorRTS_SquadFragment>(SquadHandle);
 	// --- Phase 1: Collect current member handles and their existing offsets ---
 
 	TArray<FMassEntityHandle> Members = GetSquadMembers(SquadHandle);
@@ -171,20 +121,6 @@ void UCruorRTS_SquadMovementSubsystem::UpdateSquadOffsets(const FMassEntityHandl
 	{
 		CurrentOffsets.Emplace(EntityManager.GetFragmentDataChecked<FCruorRTS_SquadMemberFragment>(Members[Index]).Offset);
 	}
-
-	// EntityQuery.ForEachEntityChunk(ExecutionContext, [&Members, &CurrentOffsets, &SquadHandle](const FMassExecutionContext& ChunkContext)
-	// {
-	// 	const TConstArrayView<FCruorRTS_SquadMemberFragment> SquadMembers = ChunkContext.GetFragmentView<FCruorRTS_SquadMemberFragment>();
-	// 	const int32 NumInChunk = ChunkContext.GetNumEntities();
-	// 	for (int32 i = 0; i < NumInChunk; ++i)
-	// 	{
-	// 		if (SquadMembers[i].SquadEntity == SquadHandle)
-	// 		{
-	// 			Members.Emplace(ChunkContext.GetEntity(i));
-	// 			CurrentOffsets.Emplace(SquadMembers[i].Offset);
-	// 		}			
-	// 	}
-	// });
 
 	const int32 NumMembers = Members.Num();
 	if (NumMembers == 0)
@@ -276,9 +212,10 @@ void UCruorRTS_SquadMovementSubsystem::HungarianAssignment(const int32 N, const 
 				}
 
 				// Reduced cost = actual cost − dual variables (always ≥ 0 by LP complementary slackness).
-				const double ReducedCost = CostMatrix[(CurrentWorker - 1) * N + (Col - 1)] - DualRow[CurrentWorker] - DualCol[Col];
 
-				if (ReducedCost < MinReducedCost[Col])
+				if (const double ReducedCost 
+					= CostMatrix[(CurrentWorker - 1) * N + (Col - 1)] - DualRow[CurrentWorker] - DualCol[Col]; 
+					ReducedCost < MinReducedCost[Col])
 				{
 					MinReducedCost[Col] = ReducedCost;
 					AugmentPath[Col] = CurrentCol;
@@ -336,7 +273,7 @@ void UCruorRTS_SquadMovementSubsystem::CreateQueryForSquad(const FMassEntityHand
 	EntityQuery.AddRequirement<FCruorRTS_SquadMemberFragment>(EMassFragmentAccess::ReadWrite);
 }
 
-void UCruorRTS_SquadMovementSubsystem::CalculateNewOffsets(const FCruorRTS_SquadFragment& SquadFragment, EFormationType FormationType,
+void UCruorRTS_SquadMovementSubsystem::CalculateNewOffsets(FCruorRTS_SquadFragment& SquadFragment, EFormationType FormationType,
 	int Count,
 	TArray<FVector>& OutNewOffsets)
 {
@@ -400,6 +337,24 @@ void UCruorRTS_SquadMovementSubsystem::CalculateNewOffsets(const FCruorRTS_Squad
 				LocalOffset = LocalOffset.RotateAngleAxis(180.f, FVector::UpVector);
 				OutNewOffsets.Add(LocalOffset);
 				PlacedMembers++;
+			}
+		}
+		
+		// Compute the centroid of all raw offsets and re-center them
+		if (OutNewOffsets.Num() > 0)
+		{
+			FVector Centroid = FVector::ZeroVector;
+			for (const FVector& Offset : OutNewOffsets)
+			{
+				Centroid += Offset;
+			}
+			Centroid /= static_cast<float>(OutNewOffsets.Num());
+
+			SquadFragment.SquadCentroid = Centroid;
+
+			for (FVector& Offset : OutNewOffsets)
+			{
+				Offset -= Centroid;
 			}
 		}
 	}

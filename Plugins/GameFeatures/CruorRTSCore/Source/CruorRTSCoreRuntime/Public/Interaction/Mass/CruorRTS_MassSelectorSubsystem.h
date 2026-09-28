@@ -35,6 +35,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FMassEntityHandle GetCachedSquadHandle() const { return CachedSquadHandle; }
 	
+	UFUNCTION(BlueprintCallable)
+	void SetCachedEntityLocation(const FVector& InLocation) { CachedNearestEntityLocation = InLocation; }
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetCachedEntityLocation() const { return CachedNearestEntityLocation; }
+	
 	void SetCachedWheelMenuGlyphIconData(const TObjectPtr<UCruorRTS_WheelMenu_GlyphIconData> InnerWheel, const TObjectPtr<UCruorRTS_WheelMenu_GlyphIconData> OuterWheel) { CachedInnerWheelMenuGlyphIconData = InnerWheel; CachedOuterWheelMenuGlyphIconData = OuterWheel; }
 	
 	UFUNCTION(BlueprintCallable)
@@ -51,6 +57,9 @@ private:
 	
 	UPROPERTY(Transient)
 	FMassEntityHandle CachedSquadHandle;
+
+	UPROPERTY(Transient)
+	FVector CachedNearestEntityLocation = FVector::ZeroVector;
 	
 	UPROPERTY(Transient)
 	TObjectPtr<UCruorRTS_WheelMenu_GlyphIconData> CachedInnerWheelMenuGlyphIconData;

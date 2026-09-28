@@ -43,7 +43,7 @@ public:
 	
 	static void CreateQueryForSquad(const FMassEntityHandle& SquadHandle, FMassEntityQuery& EntityQuery);
 	
-	static void CalculateNewOffsets(const FCruorRTS_SquadFragment& SquadFragment, const EFormationType FormationType, int Count, TArray<FVector>& OutNewOffsets);
+	static void CalculateNewOffsets(FCruorRTS_SquadFragment& SquadFragment, const EFormationType FormationType, int Count, TArray<FVector>& OutNewOffsets);
 
 private:
 
