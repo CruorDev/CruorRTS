@@ -232,7 +232,7 @@ void UCruorRTSFormationUpdated::SignalEntities(FMassEntityManager& EntityManager
 			FMassMoveTargetFragment& MoveTarget = MoveTargetFragments[EntityIndex];
 			const FCruorRTS_SquadMemberFragment& SquadMemberFragment = SquadMemberFragments[EntityIndex];
 
-			MoveTarget.Center = SquadFragment->SquadDestination + SquadMemberFragment.Offset;
+			MoveTarget.Center = TargetLocation;
 			MoveTarget.Forward = SquadFragment->SquadRotation.Vector();
 			MoveTarget.DistanceToGoal = (AgentLocation - MoveTarget.Center).Length();
 			MoveTarget.SlackRadius = 50.f;

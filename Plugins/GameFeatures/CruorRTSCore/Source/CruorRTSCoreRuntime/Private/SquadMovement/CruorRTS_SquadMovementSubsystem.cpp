@@ -338,24 +338,23 @@ void UCruorRTS_SquadMovementSubsystem::CalculateNewOffsets(FCruorRTS_SquadFragme
 				OutNewOffsets.Add(LocalOffset);
 				PlacedMembers++;
 			}
-		}
-		
-		// Compute the centroid of all raw offsets and re-center them
-		if (OutNewOffsets.Num() > 0)
+		}		
+	}
+	// Compute the centroid of all raw offsets and re-center them
+	if (OutNewOffsets.Num() > 0)
+	{
+		FVector Centroid = FVector::ZeroVector;
+		for (const FVector& Offset : OutNewOffsets)
 		{
-			FVector Centroid = FVector::ZeroVector;
-			for (const FVector& Offset : OutNewOffsets)
-			{
 				Centroid += Offset;
-			}
-			Centroid /= static_cast<float>(OutNewOffsets.Num());
+		}
+		Centroid /= static_cast<float>(OutNewOffsets.Num());
 
-			SquadFragment.SquadCentroid = Centroid;
+		SquadFragment.SquadCentroid = Centroid;
 
-			for (FVector& Offset : OutNewOffsets)
-			{
-				Offset -= Centroid;
-			}
+		for (FVector& Offset : OutNewOffsets)
+		{
+			Offset -= Centroid;
 		}
 	}
 }
